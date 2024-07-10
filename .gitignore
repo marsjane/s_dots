@@ -1,0 +1,7 @@
+config/tmux/plugins/
+.DS_Store
+config/alacritty/local.toml
+lazy-lock.json
+config/nvim/lazyvim.json
+config/aria2/aria2.session
+autokey.json~
