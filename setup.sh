@@ -170,35 +170,6 @@ function sudocheck {
 }
 
 
-function go_zsh {
-  # zsh
-  current_shell=$(echo $SHELL)
-  echo $current_shell
-  if [ "${current_shell: -3}" = "zsh" ]; then
-    if [ -L "$HOME/.config/zsh" ] || [ -d "$HOME/.config/zsh" ]; then
-      echo "zsh config exist, skip"
-      return
-    fi
-    if [ -L "$HOME/.zshrc" ] || [ -e "$HOME/.zshrc" ]; then
-      echo "zshrc exist, skip"
-      return
-    fi
-    if [ -L "$HOME/.p10k.zsh" ] || [ -e "$HOME/.p10k.zsh" ]; then
-      echo "p10k config exist, skip"
-      return
-    fi
-    echo "Current shell is zsh."
-    folder_ensure "$HOME/.config"
-    ln -s ~/dotfile/config/zsh ~/.config/zsh
-    ln -s ~/dotfile/zshrc ~/.zshrc
-    ln -s ~/dotfile/p10krc ~/.p10k.zsh
-    echo "Please run source ~/.zshrc"
-  else
-    echo "Please set zsh as the default shell"
-    echo "try chsh -s $(which zsh)"
-    return
-  fi
-}
 
 function go_tmux {
   echo "Tmux setup"
@@ -214,9 +185,12 @@ function go_tmux {
     echo "plugin tpm exist, skip"
     return
   fi
-  ln -s ~/dotfile/config/tmux ~/.config/tmux
+  folder_ensure "$HOME/.condfig"
+  ln -s ~/s_dots/config/tmux ~/.config/tmux
   # ln -s ~/dotfile/config/tmux-powerline ~/.config/tmux-powerline
-  ln -s ~/dotfile/config/tmux/tmux.conf ~/.tmux.conf
+  ln -s ~/s_dots/config/tmux/tm  folder_ensure "$HOME/.condfig"ux.conf ~/.tmux.conf
+  folder_ensure "$HOME/.tmux/plugins/"
+  cp -r ~/s_dots/config/tmux/plugins/tpm ~/.tmux/plugins
   # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   echo "Please run tmux to check, current prefix is C-x"
   echo "May need to run:"
@@ -238,21 +212,6 @@ function go_nvim {
   echo ":MasonLog to check log"
 }
 
-function go_conda {
-  echo "Miniconda setup"
-  if [ "$(is_installed conda)" == "0" ]; then
-    echo "installing miniconda"
-    mkdir -p ~/miniconda3
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-    rm -rf ~/miniconda3/miniconda.sh
-    echo "Please run follows to config conda:"
-    echo "conda config --set auto_activate_base false"
-  else
-    echo "conda exist, skip"
-    return
-  fi
-}
 
 
 while test $# -gt 0; do
